@@ -10,6 +10,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.LED;
+import frc.robot.subsystems.LED.LEDState;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -18,6 +24,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
+  private LED led = new LED();
+  private Joystick joystick = new Joystick(1);
+  private JoystickButton yellowLED = new JoystickButton(joystick, 1);
+  private JoystickButton purpleLED = new JoystickButton(joystick, 2);
+  private JoystickButton whiteLED = new JoystickButton(joystick, 3);
+  private JoystickButton rainbowLED = new JoystickButton(joystick, 4);
+  private JoystickButton blackLED = new JoystickButton(joystick, 5);
+  private JoystickButton blinkLED = new JoystickButton(joystick, 6);
   public static CTREConfigs ctreConfigs;
 
   private Command m_autonomousCommand;
@@ -28,6 +42,15 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+  public void configureButtonBindings(){
+    yellowLED.onTrue(new InstantCommand(() -> led.setState(LEDState.YELLOW)));
+    purpleLED.onTrue(new InstantCommand(() -> led.setState(LEDState.PURPLE)));
+    whiteLED.onTrue(new InstantCommand(() -> led.setState(LEDState.WHITE)));
+    rainbowLED.onTrue(new InstantCommand(() -> led.setState(LEDState.RAINBOW)));
+    blackLED.onTrue(new InstantCommand(() -> led.setState(LEDState.BLACK)));
+    blinkLED.toggleOnTrue(new LED.BlinkLED(led).repeatedly());
+  }
+
   @Override
   public void robotInit() {
     ctreConfigs = new CTREConfigs();
